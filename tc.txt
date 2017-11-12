@@ -1,0 +1,12 @@
+if=eth0
+tc qdisc add dev $if ingress
+
+
+
+tc filter add dev $if protocol all parent ffff: prio 65535 basic match "u32(u16 0x4305 0xffff at -2)" flowid :1 action drop
+
+tc filter add dev $if protocol all parent ffff: prio 99  basic match "u32(u32 0xf81a67a5 0xffffffff at -8)" and "u32(u16 0xf4cb 0xffff at -4)" flowid :1 action pass
+
+
+
+
