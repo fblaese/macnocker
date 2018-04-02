@@ -1,30 +1,14 @@
 #ifndef _TC_H
 #define _TC_H
 
-#include <string>
+#include <stdint.h>
 
-class tc
-{
-public:
-    explicit tc(const std::string &interface);
+void tc_start();
 
-    ~tc();
+void tc_stop();
 
-    void add_qdisc_ingress();
+void tc_allow_mac(const uint8_t mac[]);
 
-    void del_qdisc_ingress();
-
-    void block_all();
-
-    void allow_mac(const std::string &mac);
-
-    void disallow_mac(const std::string &mac);
-
-private:
-    tc(const tc&);
-    tc();
-
-    const std::string m_interface;
-};
+void tc_disallow_mac(const uint8_t mac[]);
 
 #endif // _TC_H

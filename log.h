@@ -1,14 +1,12 @@
 #ifndef _DEBUG_H
 #define _DEBUG_H
 
-#include <string>
+#ifdef DEBUG
+#include <stdio.h>
 
-namespace log {
-
-void debug(const std::string &dbg);
-
-void error(const std::string &dbg);
-
-} // namespace log
+#define log_debug(...) printf(__VA_ARGS__)
+#else
+#define log_debug(...) do { } while (0);
+#endif
 
 #endif // _DEBUG_H

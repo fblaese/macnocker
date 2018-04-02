@@ -1,25 +1,21 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(macNock C CXX)
+project(macNock C)
 
 option(MACNOCK_DEBUG "Enable debug messages" OFF)
 
-if(CMAKE_COMPILER_IS_GNUCXX)
-    add_definitions(-Wall -Wpedantic -Wextra -std=c++11)
-endif()
+add_definitions(-Wall -Wextra -pedantic)
 
 if(MACNOCK_DEBUG)
     add_definitions(-DDEBUG)
 endif(MACNOCK_DEBUG)
 
 set(MACNOCK_SRC
-    main.cpp
-    macnockserver.cpp
-    macnockclient.cpp
-    nockpackage.cpp
-    mac.cpp
-    tc.cpp
-    log.cpp
+    main.c
+    macnockserver.c
+    macnockclient.c
+    tc.c
+    macstorage.c
     )
 
 add_executable(macnock ${MACNOCK_SRC})

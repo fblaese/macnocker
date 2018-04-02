@@ -1,33 +1,18 @@
 #ifndef _PROTOCOL_H
 #define _PROTOCOL_H
 
-#include "mac.h"
+#include <stdint.h>
 
-#include <string>
-
-static const int PORT{2342};
-static const int8_t VERSION{1};
-
-class NockPackage
+struct NockPackage
 {
-public:
-    using Hood = std::string;
-
-    NockPackage();
-
-    NockPackage(const Mac &sourceMac, const Hood &hoodName);
-
-    size_t serialize(uint8_t *buf, size_t maxlen) const;
-
-    bool deserialize(const uint8_t *buf, size_t len);
-
-    Mac getMac() const;
-
-    std::string getHood() const;
-
-private:
-    Mac m_sourceMac;
-    Hood m_hoodName;
+    uint8_t version;
+    uint8_t mac[6];
+    uint8_t hoodLen;
+    char hood[];
 };
+
+//size_t NockPackage_serialize(uint8_t *buf, size_t maxlen, const NockPackage *p);
+
+//uint8_t NockPackage_deserialize(NockPackage *p, const uint8_t *buf, size_t len);
 
 #endif // _PROTOCOL_H
