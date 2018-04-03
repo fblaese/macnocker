@@ -29,7 +29,7 @@ static uint8_t stop;
 
 void macNockClient_stop()
 {
-    log_debug("Stopping Client\n");
+    log_debug("[c] Stopping Client\n");
     stop = 1;
 }
 
@@ -84,7 +84,7 @@ void macNockClient_run()
 
     while (!stop)
     {
-        log_debug("[c] sending\n");
+        log_trace("[c] sending\n");
 
         int sent = sendto(fd, nock, len, 0, (struct sockaddr *)&servaddr, sizeof(servaddr));
         if (sent == -1)
@@ -103,6 +103,6 @@ void macNockClient_run()
 
     close(fd);
 
-    log_debug("Client closed\n");
+    log_debug("[c] Client closed\n");
     return;
 }

@@ -56,6 +56,9 @@ void _addEntry(uint8_t mac[6])
 
     if (count != MAXENTRIES)
     {
+        log_debug("[m] new entry: %02x:%02x:%02x:%02x:%02x:%02x.\n",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+
         uint8_t prio = _getNextFreePrio();
         memcpy(storage[count].mac, mac, 6);
         storage[count].timestamp = time(NULL);
@@ -83,6 +86,10 @@ void _checkTimeout()
     {
         if (storage[i].timestamp < t)
         {
+            log_debug("[m] %02x:%02x:%02x:%02x:%02x:%02x timed out, removing.\n",
+                  storage[i].mac[0], storage[i].mac[1], storage[i].mac[2],
+                  storage[i].mac[3], storage[i].mac[4], storage[i].mac[5]);
+
             tc_disallow_mac(storage[i].mac, storage[i].prio+1);
             _freePrio(storage[i].prio);
             count--;
@@ -97,7 +104,7 @@ void _checkTimeout()
 
 void macStorage_stop()
 {
-    log_debug("Stopping Storage\n");
+    log_debug("[m] Stopping Storage\n");
     stop = 1;
 }
 
@@ -116,6 +123,6 @@ void macStorage_run()
         usleep(5 * 1000 * 1000);
     }
 
-    log_debug("Storage closed\n");
+    log_debug("[m] Storage closed\n");
     return;
 }

@@ -3,12 +3,16 @@ cmake_minimum_required(VERSION 3.0)
 project(macNock C)
 
 option(MACNOCK_DEBUG "Enable debug messages" OFF)
-
-add_definitions(-Wall -Wextra -pedantic)
-
 if(MACNOCK_DEBUG)
     add_definitions(-DDEBUG)
 endif(MACNOCK_DEBUG)
+
+option(MACNOCK_TRACE "Enable tracing messages" OFF)
+if(MACNOCK_TRACE)
+    add_definitions(-DTRACE)
+endif(MACNOCK_TRACE)
+
+add_definitions(-Wall -Wextra -pedantic)
 
 set(MACNOCK_SRC
     main.c

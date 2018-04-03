@@ -26,7 +26,7 @@ int fd;
 
 void macNockServer_stop()
 {
-    log_debug("Stopping Server\n");
+    log_debug("[s] Stopping Server\n");
     stop = 1;
     shutdown(fd, SHUT_RDWR);
 }
@@ -66,7 +66,7 @@ void macNockServer_run()
 
     while (!stop)
     {
-        log_debug("[s] waiting for connection\n");
+        log_trace("[s] waiting for connection\n");
 
         struct sockaddr_in6 client_addr;
         socklen_t addrlen = sizeof(client_addr);
@@ -83,7 +83,7 @@ void macNockServer_run()
 
         char addrBuf[INET6_ADDRSTRLEN];
         const char *ret = inet_ntop(AF_INET6, &client_addr.sin6_addr, addrBuf, sizeof(addrBuf));
-        log_debug("[s] received %d bytes from %s\n", recvlen, ret);
+        log_trace("[s] received %d bytes from %s\n", recvlen, ret);
 
         struct NockPackage *nock = (struct NockPackage *)buf;
         nock->hood[nock->hoodLen] = '\0';
@@ -94,25 +94,25 @@ void macNockServer_run()
             continue;
         }
 
-        log_debug("The MAC: %2x:%2x:%2x:%2x:%2x:%2x, the Hood: %s\n",
+        log_trace("[s] The MAC: %02x:%02x:%02x:%02x:%02x:%02x, the Hood: %s\n",
                   nock->mac[0], nock->mac[1], nock->mac[2], nock->mac[3], nock->mac[4], nock->mac[5], nock->hood);
 
         if (strcmp(nock->hood, g_hood) == 0)
         {
-            log_debug("[s] allowing %2x:%2x:%2x:%2x:%2x:%2x\n",
+            log_trace("[s] allowing %02x:%02x:%02x:%02x:%02x:%02x\n",
                   nock->mac[0], nock->mac[1], nock->mac[2], nock->mac[3], nock->mac[4], nock->mac[5]);
             macStorage_add(nock->mac);
         }
         else
         {
-            log_debug("[s] wrong hood. Not allowing %2x:%2x:%2x:%2x:%2x:%2x\n",
-                  nock->mac[0], nock->mac[1], nock->mac[2], nock->mac[3], nock->mac[4], nock->mac[5]);
+            log_debug("[s] Not allowing %02x:%02x:%02x:%02x:%02x:%02x. Wrong hood: \"%s\"\n",
+                  nock->mac[0], nock->mac[1], nock->mac[2], nock->mac[3], nock->mac[4], nock->mac[5], nock->hood);
         }
     }
 
     close(fd);
     tc_stop();
 
-    log_debug("Server closed\n");
+    log_debug("[s] Server closed\n");
     return;
 }

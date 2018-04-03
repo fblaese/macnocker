@@ -32,7 +32,7 @@ void tc_add_qdisc_ingress()
 {
     char cmd[2048];
     snprintf(cmd, 2048, "tc qdisc add dev %s ingress", g_interface);
-    log_debug("CMD: %s\n", cmd);
+    log_trace("CMD: %s\n", cmd);
     system(cmd);
 }
 
@@ -40,7 +40,7 @@ void tc_del_qdisc_ingress()
 {
     char cmd[2048];
     snprintf(cmd, 2048, "tc qdisc del dev %s ingress", g_interface);
-    log_debug("CMD: %s\n", cmd);
+    log_trace("CMD: %s\n", cmd);
     system(cmd);
 }
 
@@ -48,7 +48,7 @@ void tc_block_all()
 {
     char cmd[2048];
     snprintf(cmd, 2048, "tc filter add dev %s protocol all parent ffff: prio 65535 basic match \"u32(u16 0x4305 0xffff at -2)\" flowid :1 action drop", g_interface);
-    log_debug("CMD: %s\n", cmd);
+    log_trace("CMD: %s\n", cmd);
     system(cmd);
 }
 
@@ -63,7 +63,7 @@ void tc_allow_mac(const uint8_t mac[], uint8_t prio)
              "basic match \"u32(u32 0x%s 0x%s at -8)\" "
              "and \"u32(u16 0x%s 0x%s at -4)\" flowid :1 action pass",
              g_interface, prio, mac32, mac32, mac16, mac16);
-    log_debug("CMD: %s\n", cmd);
+    log_trace("CMD: %s\n", cmd);
     system(cmd);
 }
 
@@ -78,19 +78,23 @@ void tc_disallow_mac(const uint8_t mac[], uint8_t prio)
              "basic match \"u32(u32 0x%s 0x%s at -8)\" "
              "and \"u32(u16 0x%s 0x%s at -4)\" flowid :1 action pass",
              g_interface, prio, mac32, mac32, mac16, mac16);
-    log_debug("CMD: %s\n", cmd);
+    log_trace("CMD: %s\n", cmd);
     system(cmd);
 }
 
 void tc_start()
 {
+    log_debug("[t] Removing old qdisc.\n");
     tc_del_qdisc_ingress(); // in case a old session is sill there
 
+    log_debug("[t] Adding qdisc.\n");
     tc_add_qdisc_ingress();
+    log_debug("[t] Blocking all batman-adv traffic.\n");
     tc_block_all();
 }
 
 void tc_stop()
 {
+    log_debug("[t] Removing qdisc.\n");
     tc_del_qdisc_ingress();
 }

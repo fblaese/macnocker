@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     g_interface = argv[1];
     g_hood = argv[2];
 
-    //log_debug("Running for hood %s (%s) on interface %s (%s)\n", g_hood, argv[1], g_interface, argv[2]);
+    printf("%s: Running for hood %s on interface %s\n", argv[0], g_hood, g_interface);
 
     signal(SIGINT, &sigHandler);
     signal(SIGTERM, &sigHandler);
