@@ -45,6 +45,11 @@ void macNockServer_run()
         return;
     }
 
+    if (setsockopt(fd, SOL_SOCKET, SO_BINDTODEVICE, g_interface, strlen(g_interface)) < 0)
+    {
+        perror("[c] WARNING: Can't bind to device");
+    }
+
     // allow to reuse the port immediately as soon as the service exits.
     int sockoptval = 1;
     if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &sockoptval, sizeof(int)) != 0)
