@@ -120,7 +120,13 @@ void macStorage_run()
     while (!stop)
     {
         _checkTimeout();
-        usleep(5 * 1000 * 1000);
+        for (size_t i=0; i<5; i++)
+        {
+            if (!stop)
+            {
+                usleep(1 * 1000 * 1000);
+            }
+        }
     }
 
     log_debug("[m] Storage closed\n");
