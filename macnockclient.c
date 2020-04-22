@@ -86,6 +86,19 @@ void macNockClient_run()
     {
         log_trace("[c] sending\n");
 
+        // check if bound interface is down, trying to send data would result in an error
+        if (!(ioctl(fd, SIOCGIFFLAGS, &ifr) == 0))
+        {
+            perror("[c] ERROR: Can't read Interface information");
+            goto retry;
+        }
+        if (!(ifr.ifr_flags & IFF_RUNNING))
+        {
+            // interface is not running, silently ignore
+            log_debug("[c] interface is not running\n");
+            goto retry;
+        }
+
         int sent = sendto(fd, nock, len, 0, (struct sockaddr *)&servaddr, sizeof(servaddr));
         if (sent == -1)
         {
@@ -96,6 +109,7 @@ void macNockClient_run()
             perror("[c] ERROR: Can't send all data");
         }
 
+retry:
         usleep(1 * 1000 * 1000); // sleep 1 s
     }
 
