@@ -95,7 +95,7 @@ void macNockClient_run()
         if (!(ifr.ifr_flags & IFF_RUNNING))
         {
             // interface is not running, silently ignore
-            log_debug("[c] interface is not running\n");
+            log_trace("[c] interface is not running\n");
             goto retry;
         }
 
